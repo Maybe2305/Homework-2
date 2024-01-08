@@ -19,7 +19,7 @@ fun transfer(typeCard: String = "VK Pay", sumTransferForMonth: Int = 0, sumTrans
     if (typeCard != "VK Pay" && sumTransfer > limitsDayCard || sumTransfer + sumTransferForMonth > limitsMonthCard)
         println("Перевод отклонён! Вы превысили лимит").also { exitProcess(1) }
 
-    if (typeCard == "VK Pay" && sumTransferForMonth < limitsMonthVk && sumTransfer < limitsOneTimeVk)
+    if (typeCard == "VK Pay" && sumTransferForMonth + sumTransfer < limitsMonthVk && sumTransfer < limitsOneTimeVk)
         return println("Перевод прошёл успешно! Сумма перевода: $sumTransfer \nКомиссия составила: $commissionForVkPay")
     else if (typeCard != "VK Pay") null
     else println("Перевод отклонён! Превышен ежемесячный или ежедневный лимит").also { exitProcess(1) }
