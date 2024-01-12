@@ -201,7 +201,7 @@ class DifferentComissionKtTest {
         val typeCard = "Card"
         val sumTransferForMonth = 10000
         val sumTransfer = 100
-        val errorTransfer = -1
+        val errorTransfer = 1
 
         val result = transfer(typeCard, sumTransferForMonth, sumTransfer)
 
