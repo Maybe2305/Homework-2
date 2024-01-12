@@ -1,10 +1,11 @@
 import kotlin.system.exitProcess
 
 fun main() {
-    transfer("VK Pay", 0, sumTransfer = 10000)
+    println(transfer("Visa", 10000, sumTransfer = 100))
 }
 
-fun transfer(typeCard: String = "VK Pay", sumTransferForMonth: Int = 0, sumTransfer: Int) {
+fun transfer(typeCard: String = "VK Pay", sumTransferForMonth: Int = 0, sumTransfer: Int) : Int {
+    val errorTransfer = -1
     val limitsDayCard = 150_000
     val limitsMonthCard = 600_000
     val limitsOneTimeVk = 15_000
@@ -17,59 +18,27 @@ fun transfer(typeCard: String = "VK Pay", sumTransferForMonth: Int = 0, sumTrans
     val commissionForVkPay = 0
 
     if (typeCard != "VK Pay" && sumTransfer > limitsDayCard || sumTransfer + sumTransferForMonth > limitsMonthCard)
-        println("Перевод отклонён! Вы превысили лимит").also { exitProcess(1) }
+        return errorTransfer
 
     if (typeCard == "VK Pay" && sumTransferForMonth + sumTransfer < limitsMonthVk && sumTransfer < limitsOneTimeVk)
-        return println("Перевод прошёл успешно! Сумма перевода: $sumTransfer \nКомиссия составила: $commissionForVkPay")
+        return commissionForVkPay
     else if (typeCard != "VK Pay") null
-    else println("Перевод отклонён! Превышен ежемесячный или ежедневный лимит").also { exitProcess(1) }
+    else return errorTransfer
 
-    if (typeCard == "Maestro" && sumTransferForMonth + sumTransfer < limitForCommissionMastercardOrMaestro)
-        return println("Перевод прошёл успешно! Сумма перевода: $sumTransfer \nКомиссия составила: $commissionIntoLimit")
-    else if (typeCard != "Maestro") null
-    else println("Перевод прошёл успешно! Сумма перевода: $sumTransfer \nКомиссия составилa: $commissionWithoutLimit").also {
-        exitProcess(
-            1
-        )
-    }
+    if ((typeCard == "Maestro" || typeCard == "Mastercard") && sumTransferForMonth + sumTransfer < limitForCommissionMastercardOrMaestro)
+        return commissionIntoLimit
+    else if (typeCard != "Maestro" && typeCard != "Mastercard") null
+    else return commissionWithoutLimit.toInt()
 
-    if (typeCard == "Mastercard" && sumTransferForMonth + sumTransfer < limitForCommissionMastercardOrMaestro)
-        return println("Перевод прошёл успешно! Сумма перевода: $sumTransfer \nКомиссия составила: $commissionIntoLimit")
-    else if (typeCard != "Mastercard") null
-    else println("Перевод прошёл успешно! Сумма перевода: $sumTransfer \nКомиссия составилa: $commissionWithoutLimit").also {
-        exitProcess(
-            1
-        )
-    }
 
-    if (typeCard == "Мир" && commissionForVisaAndMir > minCommissionForVisaAndMir)
-        return println("Перевод прошёл успешно! Сумма перевода: ${sumTransfer} \nКомиссия составила: $commissionForVisaAndMir").also {
-            exitProcess(
-                1
-            )
-        }
-    else if (commissionForVisaAndMir < minCommissionForVisaAndMir) return println("Перевод прошёл успешно! Сумма перевода: ${sumTransfer} \nКомиссия составила: $minCommissionForVisaAndMir").also {
-        exitProcess(
-            1
-        )
-    }
-    else if (typeCard != "Мир") null
+    if ((typeCard == "Мир" || typeCard == "Visa") && commissionForVisaAndMir > minCommissionForVisaAndMir)
+        return commissionForVisaAndMir.toInt()
+    else if (typeCard != "Мир" && typeCard != "Visa") null
+    else  return minCommissionForVisaAndMir
 
-    if (typeCard == "Visa" && commissionForVisaAndMir > minCommissionForVisaAndMir)
-        return println("Перевод прошёл успешно! Сумма перевода: ${sumTransfer} \nКомиссия составила: $commissionForVisaAndMir").also {
-            exitProcess(
-                1
-            )
-        }
-    else if (commissionForVisaAndMir < minCommissionForVisaAndMir) return println("Перевод прошёл успешно! Сумма перевода: ${sumTransfer} \nКомиссия составила: $minCommissionForVisaAndMir").also {
-        exitProcess(
-            1
-        )
-    }
-    else if (typeCard != "Visa") null
 
     if (typeCard != "VK Pay" && typeCard != "Mastercard" && typeCard != "Maestro" && typeCard != "Visa" && typeCard != "Мир")
-        println("Введён неверный тип карты")
-
+        return errorTransfer
+    return 0
 
 }
