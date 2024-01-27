@@ -1,8 +1,8 @@
 data class Post(
-    val id: Int = 1,
-    val ownerId: Int = 1,
+    val id: Int? = 1,
+    val ownerId: Int? = 1,
     val fromId: Int = 2,
-    val text: String = "Just post",
+    val text: String? = "Just post",
     val replyOwnerId: Int = 2,
     val signerId: Int = 1,
     val canPin: Boolean = true,
@@ -58,3 +58,41 @@ fun main() {
     val isUpdate = WallService.update(updatedPost)
     println(isUpdate)
 }
+
+interface Attachment {
+    val type: String
+}
+
+abstract class Video(
+    override val type: String,
+    val id: Int,
+    val title: String,
+    val duration: Double,
+    val views: Int,
+    val canAdd: Boolean
+) : Attachment
+
+abstract class Sticker(
+    override val type: String,
+    val productId: Int,
+    val stickerId: Int,
+    val isAllowed: Boolean,
+    val animationUrl: String
+
+) : Attachment
+
+abstract class Photo(
+    override val type: String = "Photo",
+    val id: Int,
+    val albumId: Int,
+    val text: String,
+    val width: Int,
+    val height: Int
+
+) : Attachment
+
+class VideoAttachment() : Video("Video", 1, "Learn Kotlin for 1 sec", 1.1, 1, true)
+
+class StickerAttachment() : Sticker("Sticker", 1,2,true,"sticker.com")
+
+class PhotoAttachment() : Photo("Photo", 1, 2, "Description photo", 100,100)
