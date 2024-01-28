@@ -8,7 +8,8 @@ data class Post(
     val canPin: Boolean = true,
     val canDelete: Boolean = true,
     val canEdit: Boolean = true,
-    val isPinned: Boolean = false
+    val isPinned: Boolean = false,
+    val attachments: Array<Attachment> = emptyArray<Attachment>()
 )
 
 data class Comments(
@@ -63,36 +64,42 @@ interface Attachment {
     val type: String
 }
 
-abstract class Video(
+
+data class VideoAttachment(
     override val type: String,
+    val video: Video
+) : Attachment
+
+data class StickerAttachment(
+    override val type: String,
+    val sticker: Sticker
+) : Attachment
+
+data class PhotoAttachment(
+    override val type: String,
+    val photo: Photo
+) : Attachment
+
+data class Video(
     val id: Int,
     val title: String,
     val duration: Double,
     val views: Int,
     val canAdd: Boolean
-) : Attachment
+)
 
-abstract class Sticker(
-    override val type: String,
+data class Sticker(
     val productId: Int,
     val stickerId: Int,
     val isAllowed: Boolean,
     val animationUrl: String
+)
 
-) : Attachment
-
-abstract class Photo(
-    override val type: String = "Photo",
+data class Photo(
     val id: Int,
     val albumId: Int,
     val text: String,
     val width: Int,
     val height: Int
 
-) : Attachment
-
-class VideoAttachment() : Video("Video", 1, "Learn Kotlin for 1 sec", 1.1, 1, true)
-
-class StickerAttachment() : Sticker("Sticker", 1,2,true,"sticker.com")
-
-class PhotoAttachment() : Photo("Photo", 1, 2, "Description photo", 100,100)
+)
