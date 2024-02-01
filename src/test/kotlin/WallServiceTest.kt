@@ -1,5 +1,6 @@
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Test
 
 class WallServiceTest {
 
@@ -31,4 +32,27 @@ class WallServiceTest {
         val result = WallService.update(post)
         assertEquals(false, result)
     }
+
+    @Test
+    fun createComment() {
+        val postId = 1
+        val post = Post()
+        WallService.add(post)
+
+        val comment = Comments(text = "Hello")
+        val result = WallService.createComment(1, comment)
+        assertEquals("Hello", result.text)
+    }
+
+    @Test(expected = PostNotFoundException::class)
+    fun createCommentWithException() {
+        val postId = 1
+        val post = Post()
+        WallService.add(post)
+
+        val comment = Comments(text = "Hello")
+        val result = WallService.createComment(2, comment)
+        assertEquals(PostNotFoundException("No post with id: $postId"), result.text)
+    }
+
 }

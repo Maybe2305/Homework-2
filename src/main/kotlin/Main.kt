@@ -1,3 +1,5 @@
+import javax.xml.stream.events.Comment
+
 data class Post(
     val id: Int? = 1,
     val ownerId: Int? = 1,
@@ -13,7 +15,8 @@ data class Post(
 )
 
 data class Comments(
-    val count: Int = 0,
+    val id: Int = 1,
+    val text: String,
     val canPost: Boolean = true,
     val groupsCanPost: Boolean = true,
     val canClose: Boolean = true,
@@ -22,8 +25,19 @@ data class Comments(
 
 object WallService {
     var posts = emptyArray<Post>()
+    private var comments = emptyArray<Comments>()
 
     private var idPost = 1
+
+    fun createComment(postId: Int, comment: Comments): Comments {
+        for (post in posts) {
+            if (post.id == postId) {
+                comments += comment
+                return comments.last()
+            }
+        }
+        return throw PostNotFoundException("No post with id: $postId")
+    }
 
     fun add(post: Post): Post {
         val newPost = post.copy(id = idPost++)
@@ -59,6 +73,8 @@ fun main() {
     val isUpdate = WallService.update(updatedPost)
     println(isUpdate)
 }
+
+class PostNotFoundException(message: String) : RuntimeException(message)
 
 interface Attachment {
     val type: String
